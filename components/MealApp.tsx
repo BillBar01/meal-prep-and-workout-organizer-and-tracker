@@ -38,6 +38,8 @@ export default function MealApp({ initial }: { initial: InitialData }) {
   const [tripStore, setTripStore] = useState("Giant");
   const [tripTotal, setTripTotal] = useState("");
   const [wfInput, setWfInput] = useState(initial.wfUsual === null ? "" : String(initial.wfUsual));
+  const [equipment, setEquipment] = useState<string[]>(initial.equipment);
+  const hasGrill = equipment.includes("grill");
 
   const weekRef = useRef(week);
   weekRef.current = week;
@@ -158,6 +160,28 @@ export default function MealApp({ initial }: { initial: InitialData }) {
     setWfUsual(value);
     await run(supabase.from("settings").upsert({ key: "whole_foods_usual", value }, { onConflict: "key" }));
   }
+
+  async function toggleGrill() {
+    const next = hasGrill ? equipment.filter((e) => e !== "grill") : [...equipment, "grill"];
+    setEquipment(next);
+    await run(supabase.from("settings").upsert({ key: "equipment", value: next }, { onConflict: "key" }));
+  }
+
+  /* ---------- stove or grill ---------- */
+  const onGrill = (r: Recipe) => hasGrill && !!r.grill_steps?.length && week.cook_methods?.[r.id] === "grill";
+  const stepsFor = (r: Recipe) => (onGrill(r) ? (r.grill_steps as Step[]) : r.steps);
+  const stepPrefix = (kind: string, r: Recipe) => `${kind}:${r.id}${onGrill(r) ? ":grill" : ""}`;
+  const methodSwitch = (r: Recipe) => {
+    if (!hasGrill || !r.grill_steps?.length) return null;
+    const g = onGrill(r);
+    const set = (m: "stove" | "grill") => patchWeek({ cook_methods: { ...week.cook_methods, [r.id]: m } });
+    return (
+      <div className="chips" role="group" aria-label="Cooking method">
+        <button type="button" className="chip" aria-pressed={!g} onClick={() => set("stove")}>Stove &amp; oven</button>
+        <button type="button" className="chip" aria-pressed={g} onClick={() => set("grill")}>Grill</button>
+      </div>
+    );
+  };
 
   async function startNewWeek() {
     if (!armed) { setArmed(true); return; }
@@ -372,6 +396,13 @@ export default function MealApp({ initial }: { initial: InitialData }) {
             ))}
           </div>
         </section>
+        <section className="block">
+          <div className="sec-head"><h2>Your kitchen</h2></div>
+          <div className="line">
+            <div><strong>I have a grill</strong><div className="small muted">Adds a grill version to the prep and dinner steps</div></div>
+            <button type="button" className="chip" aria-pressed={hasGrill} onClick={toggleGrill}>{hasGrill ? "Yes" : "No"}</button>
+          </div>
+        </section>
         <div className="note flag small">
           <strong>Peanut &amp; tree-nut free.</strong> Nothing here uses nuts, and none of the dishes call for nut oils or pesto. Items that sometimes carry “may contain” warnings get a <strong>Check label</strong> tag on the list.
         </div>
@@ -501,19 +532,21 @@ export default function MealApp({ initial }: { initial: InitialData }) {
 
   function viewPrep() {
     if (!lunch) return <div className="note">Pick a lunch on the Plan tab first.</div>;
-    const done = lunch.steps.filter((_, i) => week.step_done?.[`L:${lunch.id}:${i}`]).length;
+    const steps = stepsFor(lunch), prefix = stepPrefix("L", lunch);
+    const done = steps.filter((_, i) => week.step_done?.[`${prefix}:${i}`]).length;
     return (
       <>
         <section className="block recipe-head">
-          <div className="eyebrow">Sunday lunch prep · {week.lunch_servings} lunches</div>
+          <div className="eyebrow">Sunday lunch prep · {week.lunch_servings} lunches{onGrill(lunch) ? " · on the grill" : ""}</div>
           <h2>{lunch.name}</h2>
-          <div className="macro">~{lunch.minutes} min · {done} of {lunch.steps.length} steps done · per lunch est. {lunch.calories} cal, {lunch.protein_g} g protein, {lunch.net_carbs_g} g net carbs</div>
+          <div className="macro">~{lunch.minutes} min · {done} of {steps.length} steps done · per lunch est. {lunch.calories} cal, {lunch.protein_g} g protein, {lunch.net_carbs_g} g net carbs</div>
+          {methodSwitch(lunch)}
           {canWake && <button type="button" className="btn ghost" onClick={toggleWake}>{wakeOn ? "Screen stays on while this is open" : "Keep screen on while cooking"}</button>}
         </section>
         {week.lunch_servings !== lunch.base_servings && (
           <div className="note small">The steps are written for {lunch.base_servings} lunches. Your list is scaled to {week.lunch_servings}, so scale the sauce and spices by about {(week.lunch_servings / lunch.base_servings).toFixed(1)}×.</div>
         )}
-        {stepsList(`L:${lunch.id}`, lunch.steps)}
+        {stepsList(prefix, steps)}
         <section className="block">
           <div className="note small"><strong>Keeping it fresh:</strong> cooked meat keeps 3–4 days in the fridge. Refrigerate Monday–Wednesday's lunches and freeze Thursday's and Friday's. Move each frozen one to the fridge the night before.</div>
         </section>
@@ -552,7 +585,8 @@ export default function MealApp({ initial }: { initial: InitialData }) {
                 <span className="small muted">est. {d.net_carbs_g} g net carbs</span>
               </summary>
               <div className="inner">
-                {stepsList(`D:${d.id}`, d.steps)}
+                {methodSwitch(d)}
+                {stepsList(stepPrefix("D", d), stepsFor(d))}
                 <label className="made">
                   <input type="checkbox" checked={made} onChange={(e) => patchWeek({ dinner_done: { ...week.dinner_done, [d.id]: e.target.checked } })} /> Made it this week
                 </label>

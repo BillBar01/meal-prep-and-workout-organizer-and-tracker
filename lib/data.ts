@@ -1,16 +1,17 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CatalogItem, Recipe, Trip, Week, WeekItem } from "./types";
 
-const WEEK_COLUMNS = "id,week_of,lunch_recipe_id,lunch_servings,dinner_ids,dinner_people,breakfast_days,snacks,step_done,dinner_done";
+const WEEK_COLUMNS = "id,week_of,lunch_recipe_id,lunch_servings,dinner_ids,dinner_people,breakfast_days,snacks,step_done,dinner_done,cook_methods";
 
 export async function loadReference(supabase: SupabaseClient) {
-  const [catalog, recipes, ings, sections] = await Promise.all([
+  const [catalog, recipes, ings, sections, equipment] = await Promise.all([
     supabase.from("catalog_items").select("*").order("sort_order"),
     supabase.from("recipes").select("*").eq("archived", false).order("sort_order"),
     supabase.from("recipe_ingredients").select("recipe_id,item_id,qty"),
     supabase.from("settings").select("value").eq("key", "sections").maybeSingle(),
+    supabase.from("settings").select("value").eq("key", "equipment").maybeSingle(),
   ]);
-  const err = catalog.error || recipes.error || ings.error || sections.error;
+  const err = catalog.error || recipes.error || ings.error || sections.error || equipment.error;
   if (err) throw err;
   const byRecipe = new Map<string, { item_id: string; qty: number }[]>();
   for (const i of ings.data ?? []) {
@@ -22,6 +23,7 @@ export async function loadReference(supabase: SupabaseClient) {
     catalog: (catalog.data ?? []) as CatalogItem[],
     recipes: (recipes.data ?? []).map((r) => ({ ...r, base_servings: Number(r.base_servings), ingredients: byRecipe.get(r.id) ?? [] })) as Recipe[],
     sections: (sections.data?.value as string[]) ?? [],
+    equipment: (equipment.data?.value as string[]) ?? ["stove", "oven"],
   };
 }
 
@@ -43,6 +45,7 @@ export async function ensureWeek(supabase: SupabaseClient, weekOf: string): Prom
         dinner_people: p?.dinner_people ?? 1,
         breakfast_days: p?.breakfast_days ?? 5,
         snacks: p?.snacks ?? {},
+        cook_methods: p?.cook_methods ?? {},
       },
       { onConflict: "week_of", ignoreDuplicates: false },
     )

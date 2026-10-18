@@ -373,6 +373,99 @@ const BREAKFAST = { name:'Soft-boiled eggs & smoked salmon', steps:[
   {t:`Serve with about 2 oz smoked salmon, salt and pepper. Take your 3 creatine gummies.`},
 ]};
 
+/* ---------- Grill versions (same ingredients, cooked outside) ---------- */
+const GRILL = {
+  korean: [
+    {t:`Set out 5 lunch containers and 5 small side containers, a sheet pan for carrying things to the grill, and a skillet for the cauliflower rice.`},
+    {t:`Slice both cucumbers into thin coins. Toss with 2 tbsp rice vinegar, 1 tsp sesame oil and a big pinch of salt. Refrigerate in a container.`},
+    {t:`Make the sauce: 1/3 cup tamari, 2 tbsp toasted sesame oil, 6 grated garlic cloves, 1 tbsp grated ginger, 1 tbsp rice vinegar, 1 tsp red pepper flakes. Pour 3 tbsp into a small bowl for brushing.`},
+    {t:`Mix the beef with 3 tbsp of the sauce (not the brushing bowl). Shape 10 thin patties, about 1/2 inch thick, and press a dimple in each so they stay flat. Trim the root ends off the green onions but leave them whole.`},
+    {t:`Heat the grill to medium-high, about 450°F. Scrape the grates clean and wipe them with an oiled paper towel.`, m:10},
+    {t:`Grill the patties with the lid closed.`, m:4},
+    {t:`Flip, brush the tops with the brushing sauce, and grill until 160°F inside. Lay the whole green onions on the grates for the last 2 minutes until charred.`, m:4},
+    {t:`Meanwhile, inside on the stove: heat 1 tbsp avocado oil in the skillet over medium-high. Cook all 3 bags of cauliflower rice until the water cooks off and it starts to brown. Salt to taste.`, m:10},
+    {t:`Rest the patties, then slice them into strips and toss with the rest of the sauce. Chop the grilled green onions.`, m:5},
+    {t:`Let everything cool so the containers don't steam.`, m:15},
+    {t:`Portion: cauliflower rice, sliced beef, grilled green onions and sesame seeds. Cucumbers and kimchi go in the small containers.`},
+  ],
+  medchicken: [
+    {t:`Marinate: mix 3 tbsp olive oil, juice of 1 lemon, 4 grated garlic cloves, 2 tsp oregano, 1 tsp smoked paprika, 1 tsp cumin and 1½ tsp salt. Coat the thighs. Halve the second lemon and set it aside.`, m:15},
+    {t:`Salad: halve the tomatoes, dice the cucumber, finely dice 1/4 red onion, chop half the parsley and halve a handful of olives. Dress with olive oil and salt. Store it separately.`},
+    {t:`Heat the grill to medium-high, about 450°F. Scrape and oil the grates.`, m:10},
+    {t:`Grill the thighs with the lid closed, then flip.`, m:6},
+    {t:`Grill the second side until 175°F inside. Put the lemon halves cut-side down on the grates at the same time.`, m:6},
+    {t:`Rest the chicken, then slice. Squeeze the grilled lemon over it.`, m:5},
+    {t:`Meanwhile, inside: cook the cauliflower rice in 1 tbsp olive oil with 2 minced garlic cloves until dry. Finish with the rest of the parsley.`, m:10},
+    {t:`Cool, then portion: rice, chicken and a spoon of feta. Salad goes in the small containers.`, m:15},
+  ],
+  taco: [
+    {t:`Mix the spices: 2 tbsp chili powder, 2 tsp cumin, 1 tsp smoked paprika, 1 tsp garlic powder, 1 tsp oregano, 1½ tsp salt. Work them into the beef and shape 8 patties about 3/4 inch thick. Cut the onion into thick rounds.`},
+    {t:`Heat the grill to medium-high, about 450°F. Scrape and oil the grates.`, m:10},
+    {t:`Grill the patties and onion rounds with the lid closed, then flip.`, m:4},
+    {t:`Grill until the patties hit 160°F and the onions are charred.`, m:4},
+    {t:`Inside: chop the patties and onions, put them in a skillet with the can of tomatoes and green chiles, and simmer until thick.`, m:6},
+    {t:`Meanwhile cook the cauliflower rice in 1 tbsp oil until dry. Finish with the juice of 1 lime, chopped cilantro and salt.`, m:10},
+    {t:`Cool, then portion rice and beef. Pack cheese, sour cream and salsa in the small containers. Slice half an avocado each morning.`, m:15},
+  ],
+  sausage: [
+    {t:`Cut the peppers into flat planks, the onion into thick rounds and the zucchini lengthwise into 1/2-inch planks. Toss the vegetables with olive oil, salt and 2 tsp Italian seasoning.`},
+    {t:`Heat the grill to medium, about 375°F. Scrape and oil the grates.`, m:10},
+    {t:`Grill the sausages whole, lid closed, turning every few minutes, until 160°F inside. Add the vegetables for the last 10 minutes and flip them once.`, m:15},
+    {t:`Inside: slice the sausages and chop the vegetables. Warm them in a pot with the marinara and a pinch of red pepper flakes.`, m:5},
+    {t:`Meanwhile cook 2 bags of cauliflower rice in oil until dry, and salt it.`, m:10},
+    {t:`Cool, then portion. Top with mozzarella and parmesan; it melts when you reheat.`, m:15},
+  ],
+  shawarma: [
+    {t:`Marinade: 1/2 cup Greek yogurt, 3 tbsp olive oil, juice of 1 lemon, 5 grated garlic cloves, 2 tsp cumin, 2 tsp paprika, 1 tsp turmeric, 1/2 tsp cinnamon, 2 tsp salt. Coat the thighs and let them sit.`, m:20},
+    {t:`Garlic sauce: grate half the cucumber, squeeze out the water, and mix with the rest of the yogurt, 1 grated garlic clove, juice of 1/2 lemon and salt. Refrigerate.`},
+    {t:`Salad: dice the rest of the cucumber, halve the tomatoes, thinly slice 1/2 red onion and chop the parsley. Dress with olive oil, lemon and salt.`},
+    {t:`Heat the grill to medium-high, about 450°F. Scrape and oil the grates well; yogurt marinade sticks.`, m:10},
+    {t:`Grill the thighs with the lid closed, then flip.`, m:6},
+    {t:`Grill until 175°F inside with charred edges.`, m:6},
+    {t:`Meanwhile, inside: cook the cauliflower rice in oil until dry. Season with salt and 1/2 tsp cumin.`, m:10},
+    {t:`Rest and slice the chicken, cool, then portion. Sauce and salad go in the small containers.`, m:15},
+  ],
+  salmon: [
+    {t:`Heat the grill to medium-high. Scrape the grates and oil them well. Toss the asparagus with oil and salt; pat the salmon dry, oil and salt it.`, m:10},
+    {t:`Lay the asparagus across the grates and the salmon skin-side down. Close the lid and don't flip the fish. Turn the asparagus once.`, m:7},
+    {t:`Take the salmon off at 125°F. Top it with a pat of butter, a little grated garlic and a squeeze of lemon.`},
+  ],
+  steak: [
+    {t:`Salt the steak on both sides and leave it uncovered in the fridge, ideally that morning and at least 30 min ahead.`},
+    {t:`Heat the grill as hot as it goes. Toss the broccoli florets with oil, salt and red pepper flakes and wrap them in a foil packet.`, m:10},
+    {t:`Put the broccoli packet on the grill.`, m:12},
+    {t:`Pat the steak dry and grill it, lid open, then flip.`, m:4},
+    {t:`Grill until 130°F for medium-rare. Top with a pat of butter.`, m:4},
+    {t:`Rest before slicing.`, m:5},
+  ],
+  chicken: [
+    {t:`Pat the thighs dry and season with salt, pepper, garlic powder and paprika. Toss halved Brussels sprouts with oil and salt in a foil packet.`},
+    {t:`Set the grill up for two zones: one side medium-high, the other side off. Close the lid to preheat.`, m:10},
+    {t:`Thighs skin-side up on the cool side and the Brussels packet on the hot side. Close the lid.`, m:30},
+    {t:`Move the thighs skin-side down over the hot side to crisp until they reach 175°F. Watch for flare-ups.`, m:4},
+  ],
+  shrimp: [
+    {t:`Thaw the shrimp in cold water, then pat dry and thread onto skewers. Cut the zucchini lengthwise into 1/4-inch planks. Oil and salt both.`, m:10},
+    {t:`Heat the grill to medium-high. Scrape and oil the grates.`, m:10},
+    {t:`Grill the zucchini planks, flipping once.`, m:5},
+    {t:`Grill the shrimp until pink.`, m:2},
+    {t:`Flip and finish the shrimp.`, m:2},
+    {t:`Toss the shrimp with melted butter, garlic, red pepper flakes, lemon and parsley. Slice the zucchini into ribbons alongside.`},
+  ],
+  porkchop: [
+    {t:`Salt the chop and let it sit. Wrap the green beans in a foil packet with 1 tbsp butter, a minced garlic clove and salt.`, m:15},
+    {t:`Heat the grill to medium-high. Put the green bean packet on.`, m:10},
+    {t:`Grill the chop with the lid closed, then flip.`, m:5},
+    {t:`Grill until 145°F, then rest.`, m:4},
+  ],
+  burger: [
+    {t:`Shape the beef into one thick patty, press a dimple in the center, and salt both sides. Heat the grill to medium-high.`, m:10},
+    {t:`Grill the patty with the lid closed.`, m:4},
+    {t:`Flip, add the cheddar, close the lid, and grill until 160°F.`, m:4},
+    {t:`Chop the romaine and tomato. Top with pickles, mayo and mustard, then the burger.`},
+  ],
+};
+
 const SNACKS = [
   {id:'blackberries', label:'Blackberries', unit:'6 oz clamshells'},
   {id:'dates', label:'Medjool dates', unit:'containers'},
@@ -387,7 +480,7 @@ const LOCAL_KEY = 'sunday-prep-v1';
 const DEFAULTS = {
   weekOf: lastSunday(), lunch:'korean', servings:5, dinners:['salmon','steak','chicken','shrimp'], people:1, bfDays:5,
   snacks:{blackberries:3, dates:1, sunbutter:1}, checked:{}, pantryNeed:{}, custom:[], stepDone:{}, dinnerDone:{},
-  trips:[], wfUsual:'', history:[],
+  trips:[], wfUsual:'', history:[], hasGrill:true, methods:{},
 };
 let S = JSON.parse(JSON.stringify(DEFAULTS));
 try { const saved = JSON.parse(localStorage.getItem(LOCAL_KEY) || 'null'); if (saved) S = Object.assign(S, saved); } catch (e) {}
@@ -510,6 +603,10 @@ function viewPlan() {
     <div class="sec-head"><h2>Snacks</h2></div>
     <div class="stack">${snackRows}</div>
   </section>
+  <section class="block">
+    <div class="sec-head"><h2>Your kitchen</h2></div>
+    <div class="line"><div><strong>I have a grill</strong><div class="small muted">Adds a grill version to the prep and dinner steps</div></div><button class="chip" data-act="hasgrill" aria-pressed="${S.hasGrill}">${S.hasGrill ? 'Yes' : 'No'}</button></div>
+  </section>
   <div class="note flag small"><strong>Peanut & tree-nut free.</strong> Nothing here uses nuts, and none of the dishes call for nut oils or pesto. Items that sometimes carry “may contain” warnings get a <strong>Check label</strong> tag on the list.</div>
   <section class="block">
     <button class="btn wide" data-act="tab" data-v="shop">Open grocery list · ${count} items</button>
@@ -585,18 +682,28 @@ function stepsList(prefix, steps) {
     return `<li class="step ${done ? 'done' : ''}"><input type="checkbox" data-done="${key}" ${done ? 'checked' : ''} aria-label="Step ${i + 1} done"><div class="txt"><span>${esc(s.t)}</span>${tm}</div></li>`;
   }).join('')}</ol>`;
 }
+const onGrill = id => !!(S.hasGrill && GRILL[id] && (S.methods || {})[id] === 'grill');
+const stepsFor = r => onGrill(r.id) ? GRILL[r.id] : r.steps;
+const stepPrefix = (kind, id) => kind + ':' + id + (onGrill(id) ? ':grill' : '');
+function methodSwitch(id) {
+  if (!S.hasGrill || !GRILL[id]) return '';
+  const g = onGrill(id);
+  return `<div class="chips" role="group" aria-label="Cooking method"><button class="chip" data-act="method" data-v="${id}" data-m="stove" aria-pressed="${!g}">Stove & oven</button><button class="chip" data-act="method" data-v="${id}" data-m="grill" aria-pressed="${g}">Grill</button></div>`;
+}
 function viewPrep() {
   const r = lunchRecipe();
-  const done = r.steps.filter((s, i) => S.stepDone['L:' + r.id + ':' + i]).length;
+  const steps = stepsFor(r), prefix = stepPrefix('L', r.id);
+  const done = steps.filter((s, i) => S.stepDone[prefix + ':' + i]).length;
   return `
   <section class="block recipe-head">
-    <div class="eyebrow">Sunday lunch prep · ${S.servings} lunches</div>
+    <div class="eyebrow">Sunday lunch prep · ${S.servings} lunches${onGrill(r.id) ? ' · on the grill' : ''}</div>
     <h2>${esc(r.name)}</h2>
-    <div class="macro">~${r.mins} min · ${done} of ${r.steps.length} steps done · per lunch est. ${r.cal} cal, ${r.pro} g protein, ${r.carb} g net carbs</div>
+    <div class="macro">~${r.mins} min · ${done} of ${steps.length} steps done · per lunch est. ${r.cal} cal, ${r.pro} g protein, ${r.carb} g net carbs</div>
+    ${methodSwitch(r.id)}
     ${'wakeLock' in navigator ? `<button class="btn ghost" data-act="wake">${WL ? 'Screen stays on while this is open' : 'Keep screen on while cooking'}</button>` : ''}
   </section>
   ${S.servings !== 5 ? `<div class="note small">The steps are written for 5 lunches. Your list is scaled to ${S.servings}, so scale the sauce and spices by about ${(S.servings / 5).toFixed(1)}×.</div>` : ''}
-  ${stepsList('L:' + r.id, r.steps)}
+  ${stepsList(prefix, steps)}
   <section class="block">
     <div class="note small"><strong>Keeping it fresh:</strong> cooked meat keeps 3–4 days in the fridge. Refrigerate Monday–Wednesday's lunches and freeze Thursday's and Friday's. Move each frozen one to the fridge the night before.</div>
   </section>
@@ -611,7 +718,7 @@ function viewDinner() {
   if (!picks.length) return `<section class="block"><div class="note">No dinners picked yet. Choose a few on the Plan tab and they’ll show up here with cooking steps.</div><button class="btn" data-act="tab" data-v="plan">Pick dinners</button></section>`;
   return `<section class="block"><p class="small muted" style="margin:0">Cooking for ${S.people}. Each one is a protein and a vegetable, about 20–45 minutes. Tap a dinner to open the steps.</p>
   ${picks.map(d => `<details class="card" ${OPEN[d.id] ? 'open' : ''} data-dinner="${d.id}"><summary><span class="row1"><strong>${esc(d.name)}</strong><span class="pill ${S.dinnerDone[d.id] ? '' : 'quiet'}">${S.dinnerDone[d.id] ? 'Made' : '~' + d.mins + ' min'}</span></span><span class="small muted">est. ${d.carb} g net carbs</span></summary>
-    <div class="inner">${stepsList('D:' + d.id, d.steps)}<label class="made"><input type="checkbox" data-made="${d.id}" ${S.dinnerDone[d.id] ? 'checked' : ''}> Made it this week</label></div></details>`).join('')}
+    <div class="inner">${methodSwitch(d.id)}${stepsList(stepPrefix('D', d.id), stepsFor(d))}<label class="made"><input type="checkbox" data-made="${d.id}" ${S.dinnerDone[d.id] ? 'checked' : ''}> Made it this week</label></div></details>`).join('')}
   </section>`;
 }
 
@@ -672,6 +779,8 @@ document.addEventListener('click', e => {
     if (k.startsWith('snack:')) { const id = k.slice(6); S.snacks = Object.assign({}, S.snacks, { [id]: Math.min(6, Math.max(0, (S.snacks[id] || 0) + d)) }); }
     else { const lim = { servings:[1,10], people:[1,4], bfDays:[0,7] }[k]; S[k] = Math.min(lim[1], Math.max(lim[0], S[k] + d)); }
   }
+  else if (act === 'hasgrill') { S.hasGrill = !S.hasGrill; }
+  else if (act === 'method') { e.preventDefault(); S.methods = Object.assign({}, S.methods, { [v]: b.dataset.m }); }
   else if (act === 'need') { S.pantryNeed = Object.assign({}, S.pantryNeed, { [v]: !S.pantryNeed[v] }); }
   else if (act === 'rmcustom') { e.preventDefault(); S.custom = S.custom.filter(c => c.id !== v); }
   else if (act === 'logtrip') {

@@ -25,6 +25,7 @@ export type Recipe = {
   protein_g: number | null;
   net_carbs_g: number | null;
   steps: Step[];
+  grill_steps: Step[] | null;
   sort_order: number;
   ingredients: { item_id: string; qty: number }[];
 };
@@ -40,6 +41,7 @@ export type Week = {
   snacks: Record<string, number>;
   step_done: Record<string, boolean>;
   dinner_done: Record<string, boolean>;
+  cook_methods: Record<string, "stove" | "grill">;
 };
 
 export type WeekItem = {
@@ -66,6 +68,7 @@ export type InitialData = {
   catalog: CatalogItem[];
   recipes: Recipe[];
   sections: string[];
+  equipment: string[];
   week: Week;
   history: { week_of: string; lunch_recipe_id: string | null }[];
   items: WeekItem[];
