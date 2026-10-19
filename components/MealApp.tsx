@@ -142,8 +142,15 @@ export default function MealApp({ initial }: { initial: InitialData }) {
   async function logTrip() {
     const total = parseFloat(tripTotal);
     if (!(total > 0)) return;
+    const amount = Math.round(total * 100) / 100;
+    const today = todayISO();
+    if (trips.some((t) => t.trip_date === today && t.store === tripStore && t.total === amount)) {
+      setTripTotal("");
+      setToast(`A ${money(amount)} ${tripStore} trip is already logged for today`);
+      return;
+    }
     const row = await run(
-      supabase.from("trips").insert({ trip_date: todayISO(), store: tripStore, total: Math.round(total * 100) / 100, week_id: week.id })
+      supabase.from("trips").insert({ trip_date: today, store: tripStore, total: amount, week_id: week.id })
         .select("id,trip_date,store,total,week_id").single(),
     );
     if (row) {
