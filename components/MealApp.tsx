@@ -4,12 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ensureWeek, loadWeekState } from "@/lib/data";
 import { addDays, buildList, fmtQty, money, niceDate, sundayOf, todayISO, weeksBetween } from "@/lib/plan";
-import type { InitialData, Recipe, Step, Trip, Week, WeekItem } from "@/lib/types";
+import type { CookMethod, InitialData, Recipe, Step, Trip, Week, WeekItem } from "@/lib/types";
 
 type Tab = "plan" | "shop" | "prep" | "dinner";
 const TABS: Tab[] = ["plan", "shop", "prep", "dinner"];
 const TITLES: Record<Tab, string> = { plan: "Plan the week", shop: "Grocery list", prep: "Meal prep", dinner: "Dinners" };
 const TAB_KEY = "meal-prep:tab";
+const METHOD_LABELS: Record<CookMethod, string> = { stove: "Stove & oven", grill: "Grill", airfryer: "Air fryer" };
 
 type WakeLock = { release: () => Promise<void>; addEventListener: (t: string, f: () => void) => void };
 
@@ -40,6 +41,7 @@ export default function MealApp({ initial }: { initial: InitialData }) {
   const [wfInput, setWfInput] = useState(initial.wfUsual === null ? "" : String(initial.wfUsual));
   const [equipment, setEquipment] = useState<string[]>(initial.equipment);
   const hasGrill = equipment.includes("grill");
+  const hasAirFryer = equipment.includes("airfryer");
 
   const weekRef = useRef(week);
   weekRef.current = week;
@@ -168,24 +170,36 @@ export default function MealApp({ initial }: { initial: InitialData }) {
     await run(supabase.from("settings").upsert({ key: "whole_foods_usual", value }, { onConflict: "key" }));
   }
 
-  async function toggleGrill() {
-    const next = hasGrill ? equipment.filter((e) => e !== "grill") : [...equipment, "grill"];
+  async function toggleEquipment(name: string) {
+    const next = equipment.includes(name) ? equipment.filter((e) => e !== name) : [...equipment, name];
     setEquipment(next);
     await run(supabase.from("settings").upsert({ key: "equipment", value: next }, { onConflict: "key" }));
   }
 
-  /* ---------- stove or grill ---------- */
-  const onGrill = (r: Recipe) => hasGrill && !!r.grill_steps?.length && week.cook_methods?.[r.id] === "grill";
-  const stepsFor = (r: Recipe) => (onGrill(r) ? (r.grill_steps as Step[]) : r.steps);
-  const stepPrefix = (kind: string, r: Recipe) => `${kind}:${r.id}${onGrill(r) ? ":grill" : ""}`;
+  /* ---------- stove, grill or air fryer ---------- */
+  const altSteps = (r: Recipe, m: CookMethod) => (m === "grill" ? r.grill_steps : m === "airfryer" ? r.airfry_steps : null);
+  const methodsFor = (r: Recipe): CookMethod[] => [
+    "stove",
+    ...(hasGrill && r.grill_steps?.length ? ["grill" as const] : []),
+    ...(hasAirFryer && r.airfry_steps?.length ? ["airfryer" as const] : []),
+  ];
+  const methodOf = (r: Recipe): CookMethod => {
+    const m = week.cook_methods?.[r.id];
+    return m && methodsFor(r).includes(m) ? m : "stove";
+  };
+  const onGrill = (r: Recipe) => methodOf(r) === "grill";
+  const stepsFor = (r: Recipe) => altSteps(r, methodOf(r)) ?? r.steps;
+  const stepPrefix = (kind: string, r: Recipe) => `${kind}:${r.id}${methodOf(r) === "stove" ? "" : ":" + methodOf(r)}`;
   const methodSwitch = (r: Recipe) => {
-    if (!hasGrill || !r.grill_steps?.length) return null;
-    const g = onGrill(r);
-    const set = (m: "stove" | "grill") => patchWeek({ cook_methods: { ...week.cook_methods, [r.id]: m } });
+    const methods = methodsFor(r);
+    if (methods.length < 2) return null;
+    const cur = methodOf(r);
+    const set = (m: CookMethod) => patchWeek({ cook_methods: { ...week.cook_methods, [r.id]: m } });
     return (
       <div className="chips" role="group" aria-label="Cooking method">
-        <button type="button" className="chip" aria-pressed={!g} onClick={() => set("stove")}>Stove &amp; oven</button>
-        <button type="button" className="chip" aria-pressed={g} onClick={() => set("grill")}>Grill</button>
+        {methods.map((m) => (
+          <button key={m} type="button" className="chip" aria-pressed={cur === m} onClick={() => set(m)}>{METHOD_LABELS[m]}</button>
+        ))}
       </div>
     );
   };
@@ -407,7 +421,11 @@ export default function MealApp({ initial }: { initial: InitialData }) {
           <div className="sec-head"><h2>Your kitchen</h2></div>
           <div className="line">
             <div><strong>I have a grill</strong><div className="small muted">Adds a grill version to the prep and dinner steps</div></div>
-            <button type="button" className="chip" aria-pressed={hasGrill} onClick={toggleGrill}>{hasGrill ? "Yes" : "No"}</button>
+            <button type="button" className="chip" aria-pressed={hasGrill} onClick={() => toggleEquipment("grill")}>{hasGrill ? "Yes" : "No"}</button>
+          </div>
+          <div className="line">
+            <div><strong>I have an air fryer</strong><div className="small muted">Adds an air fryer version to the prep and dinner steps</div></div>
+            <button type="button" className="chip" aria-pressed={hasAirFryer} onClick={() => toggleEquipment("airfryer")}>{hasAirFryer ? "Yes" : "No"}</button>
           </div>
         </section>
         <div className="note flag small">
@@ -544,7 +562,7 @@ export default function MealApp({ initial }: { initial: InitialData }) {
     return (
       <>
         <section className="block recipe-head">
-          <div className="eyebrow">Sunday lunch prep · {week.lunch_servings} lunches{onGrill(lunch) ? " · on the grill" : ""}</div>
+          <div className="eyebrow">Sunday lunch prep · {week.lunch_servings} lunches{onGrill(lunch) ? " · on the grill" : methodOf(lunch) === "airfryer" ? " · in the air fryer" : ""}</div>
           <h2>{lunch.name}</h2>
           <div className="macro">~{lunch.minutes} min · {done} of {steps.length} steps done · per lunch est. {lunch.calories} cal, {lunch.protein_g} g protein, {lunch.net_carbs_g} g net carbs</div>
           {methodSwitch(lunch)}

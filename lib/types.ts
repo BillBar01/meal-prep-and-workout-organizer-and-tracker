@@ -1,5 +1,7 @@
 export type Step = { t: string; m?: number };
 
+export type CookMethod = "stove" | "grill" | "airfryer";
+
 export type CatalogItem = {
   id: string;
   name: string;
@@ -26,6 +28,7 @@ export type Recipe = {
   net_carbs_g: number | null;
   steps: Step[];
   grill_steps: Step[] | null;
+  airfry_steps: Step[] | null;
   sort_order: number;
   ingredients: { item_id: string; qty: number }[];
 };
@@ -41,7 +44,7 @@ export type Week = {
   snacks: Record<string, number>;
   step_done: Record<string, boolean>;
   dinner_done: Record<string, boolean>;
-  cook_methods: Record<string, "stove" | "grill">;
+  cook_methods: Record<string, CookMethod>;
 };
 
 export type WeekItem = {
